@@ -1,0 +1,47 @@
+buildscript {
+    ext {
+        springBootVersion = '2.1.2.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.graphql-java.tutorial'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.graphql-java:graphql-java:17.3'
+    // https://mvnrepository.com/artifact/com.graphql-java/graphql-java-spring-boot-starter-webmvc
+    implementation 'com.graphql-java:graphql-java-spring-boot-starter-webmvc:2021-10-25T04-50-54-fbc162f'
+    implementation 'com.google.guava:guava:31.0.1-jre'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.6.2'
+    implementation 'com.graphql-java-kickstart:graphiql-spring-boot-starter:11.1.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.6.2'
+    testImplementation 'io.rest-assured:rest-assured:4.1.1'
+    // https://mvnrepository.com/artifact/io.rest-assured/json-path
+    implementation 'io.rest-assured:json-path:4.1.1'
+    // https://mvnrepository.com/artifact/io.rest-assured/xml-path
+    implementation 'io.rest-assured:xml-path:4.1.1'
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+
+
+
+}
+
+test {
+    useJUnitPlatform()
+}

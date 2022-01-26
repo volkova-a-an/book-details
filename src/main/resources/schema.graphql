@@ -1,0 +1,23 @@
+# GraphQL is that it is statically typed
+# This schema defines one top level field (in the type Query): bookById which returns the details of a specific book.
+
+# queries a book by the book id
+type Query {
+    bookById(id: ID): Book
+}
+
+# It also defines the type Book which has the fields: id, name, pageCount and author.
+type Book {
+    id: ID
+    name: String
+    pageCount: Int
+    author: Author
+}
+
+#author is of type Author, which is defined after Book.
+
+type Author {
+    id: ID
+    firstName: String
+    lastName: String
+}
