@@ -16,7 +16,10 @@ apply plugin: 'io.spring.dependency-management'
 
 group = 'com.graphql-java.tutorial'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+
+ext {
+    karateVersion = '1.0.1'
+}
 
 repositories {
     mavenCentral()
@@ -37,11 +40,34 @@ dependencies {
     implementation 'io.rest-assured:xml-path:4.1.1'
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     compileOnly 'org.projectlombok:lombok:1.18.22'
-
-
+    testCompile "com.intuit.karate:karate-junit5:${karateVersion}"
 
 }
 
 test {
     useJUnitPlatform()
+    // pull karate options into the runtime
+    systemProperty "karate.options", System.properties.getProperty("karate.options")
+    // pull karate env into the runtime
+    systemProperty "karate.env", System.properties.getProperty("karate.env")
+    systemProperty "karate.output.dir", System.properties.setProperty("karate.output.dir","build")
+    // ensure tests are always run
+    outputs.upToDateWhen { false }
 }
+
+task karateDebug(type: JavaExec) {
+    classpath = sourceSets.test.runtimeClasspath
+    main = 'com.intuit.karate.cli.Main'
+}
+
+ sourceSets {
+    test {
+        resources {
+            srcDir ('src/test/java')
+            exclude '**/*.java'
+        }
+    }
+}
+
+sourceCompatibility  = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8

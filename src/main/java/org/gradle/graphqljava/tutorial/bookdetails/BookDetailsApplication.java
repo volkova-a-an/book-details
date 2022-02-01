@@ -1,4 +1,4 @@
-package com.graphqljava.tutorial.bookdetails;
+package org.gradle.graphqljava.tutorial.bookdetails;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

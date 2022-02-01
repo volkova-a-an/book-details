@@ -1,19 +1,16 @@
-package com.graphqljava.tutorial.bookdetails.restassured;
+package org.gradle.graphqljava.tutorial.bookdetails.restassured;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.graphqljava.tutorial.bookdetails.Book;
-import com.graphqljava.tutorial.bookdetails.GraphQLQuery;
-import io.restassured.http.ContentType;
+import org.gradle.graphqljava.tutorial.bookdetails.Book;
+import org.gradle.graphqljava.tutorial.bookdetails.GraphQLQuery;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static com.graphqljava.tutorial.bookdetails.restassured.RequestSpec.BASE_URI;
+import static org.gradle.graphqljava.tutorial.bookdetails.restassured.RequestSpec.BASE_URI;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -29,7 +26,7 @@ public class RestAssuredTest {
 
         GraphQLQuery query = new GraphQLQuery();
 
-        String file = Files.readString(Path.of("src/main/resources/book.graphql"));
+        String file = new String(Files.readAllBytes(Paths.get("src/test/java/queries/book.graphql")));
 
         query.setQuery(file);
 

@@ -1,4 +1,4 @@
-package com.graphqljava.tutorial.bookdetails;
+package org.gradle.graphqljava.tutorial.bookdetails;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.graphqljava.tutorial.bookdetails.restassured;
+package org.gradle.graphqljava.tutorial.bookdetails.restassured;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.restassured.http.ContentType;
