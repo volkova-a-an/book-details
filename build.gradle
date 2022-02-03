@@ -16,7 +16,7 @@ version = '0.0.1-SNAPSHOT'
 ext {
     karateVersion = '1.0.1'
     springBootVersion = '2.6.3'
-    restAssuredVersion = '4.1.1'
+    restAssuredVersion = '4.5.0'
 }
 
 repositories {
@@ -24,6 +24,7 @@ repositories {
 }
 
 dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.22'
     //graphql-spring-boot-starter is used for enabling GraphQL servlet, and it becomes available at a path /graphql. It initializes the GraphQLSchema bean.
     //allows us to write schema with GraphQL schema language, which is simple to understand.
 
@@ -38,14 +39,10 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     //provides a user interface with which we could test our GraphQL queries and view query definitions.
     implementation 'com.graphql-java-kickstart:graphiql-spring-boot-starter:11.1.0'
+
     testImplementation "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
     testImplementation "io.rest-assured:rest-assured:$restAssuredVersion"
-    // https://mvnrepository.com/artifact/io.rest-assured/json-path
-    implementation "io.rest-assured:json-path:$restAssuredVersion"
-    // https://mvnrepository.com/artifact/io.rest-assured/xml-path
-    implementation "io.rest-assured:xml-path:$restAssuredVersion"
-    // https://mvnrepository.com/artifact/org.projectlombok/lombok
-    compileOnly 'org.projectlombok:lombok:1.18.22'
+
     testCompile "com.intuit.karate:karate-junit5:${karateVersion}"
 
 }
