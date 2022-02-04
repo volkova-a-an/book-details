@@ -1,6 +1,5 @@
 package org.gradle.graphqljava.tutorial.bookdetails;
 
-import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import graphql.GraphQL;
 import graphql.schema.GraphQLSchema;
@@ -15,9 +14,14 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
 
+/**
+ * Once we have schema.graphql file we need to "bring it to life" by reading the file and parsing it and adding code to fetch data for it.
+ * We create a new GraphQLProvider class in the package com.graphqljava.tutorial.bookdetails with an init method which will create a GraphQL instance:
+ */
 @Component
 public class GraphQLProvider {
 
@@ -28,15 +32,18 @@ public class GraphQLProvider {
 
     // creates a GraphQL instance
     @PostConstruct
-    // We use Guava Resources to read the file from our classpath
+    // We use Guava Resources to read the file from our classpath, then create a GraphQLSchema and GraphQL instance.
+    // This GraphQL instance is exposed as a Spring Bean via the graphQL() method annotated with @Bean.
+    // The GraphQL Java Spring adapter will use that GraphQL instance to make our schema available via HTTP on the default url /graphql.
+    //init method which will create a GraphQL instance:
     public void init() throws IOException {
         URL url = Resources.getResource("schema.graphql");
-        String sdl = Resources.toString(url, Charsets.UTF_8);
+        String sdl = Resources.toString(url, StandardCharsets.UTF_8);
         GraphQLSchema graphQLSchema = buildSchema(sdl);
         this.graphQL = GraphQL.newGraphQL(graphQLSchema).build();
     }
 
-    // creates the schema
+    // buildSchema method which creates the GraphQLSchema instance and wires in code to fetch data:
     private GraphQLSchema buildSchema(String sdl) {
         // TypeDefinitionRegistry is the parsed version of our schema file.
         TypeDefinitionRegistry typeRegistry = new SchemaParser().parse(sdl);
@@ -54,8 +61,12 @@ public class GraphQLProvider {
         return RuntimeWiring.newRuntimeWiring()
                 .type(newTypeWiring("Query")
                         .dataFetcher("bookById", graphQLDataFetchers.getBookByIdDataFetcher()))
+                .type(newTypeWiring("Query")
+                        .dataFetcher("allBooks", graphQLDataFetchers.getAllBooksDataFetcher()))
                 .type(newTypeWiring("Book")
                         .dataFetcher("author", graphQLDataFetchers.getAuthorDataFetcher()))
+                .type(newTypeWiring("Mutation")
+                        .dataFetcher("createBook", graphQLDataFetchers.createBookDataFetcher()))
                 .build();
     }
 

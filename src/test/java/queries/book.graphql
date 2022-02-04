@@ -1,5 +1,11 @@
+#This is not JSON (even though it looks deliberately similar), it is a GraphQL query. It basically says:
+#
+#query a book with a specific id
+#get me the id, name, pageCount and author from that book
+#for the author I want to know the firstName and lastName
+
 {
-    bookById(id: "book-1"){
+    bookById(id: "book-2"){
         id
         name
         pageCount

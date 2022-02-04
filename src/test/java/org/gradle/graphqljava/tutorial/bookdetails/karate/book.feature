@@ -1,4 +1,4 @@
-Feature: test graphql end point
+Feature: test graphql endpoint
 
   Background:
     * url baseUrl

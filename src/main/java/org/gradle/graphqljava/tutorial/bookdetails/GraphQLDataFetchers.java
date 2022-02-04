@@ -5,11 +5,10 @@ import graphql.schema.DataFetcher;
 import org.checkerframework.common.returnsreceiver.qual.This;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
+//A DataFetcher provides the data for a field (and changes something, if it is a mutation).
 public class GraphQLDataFetchers {
 
     /**
@@ -23,7 +22,8 @@ public class GraphQLDataFetchers {
 
     // We are getting our books and authors from a static list inside the class. This is made just for this tutorial.
     // It is very important to understand that GraphQL doesn't dictate in anyway where the data comes from.
-    private static final List<Map<String, String>> books = Arrays.asList(
+    private static List<Map<String, String>> books =
+            new ArrayList<>(Arrays.asList(
             ImmutableMap.of("id", "book-1",
                     "name", "Harry Potter and the Philosopher's Stone",
                     "pageCount", "223",
@@ -36,9 +36,9 @@ public class GraphQLDataFetchers {
                     "name", "Interview with the vampire",
                     "pageCount", "371",
                     "authorId", "author-3")
-    );
+            ));
 
-    private static List<Map<String, String>> authors = Arrays.asList(
+    private static List<Map<String, String>> authors = new ArrayList<>(Arrays.asList(
             ImmutableMap.of("id", "author-1",
                     "firstName", "Joanne",
                     "lastName", "Rowling"),
@@ -47,8 +47,11 @@ public class GraphQLDataFetchers {
                     "lastName", "Melville"),
             ImmutableMap.of("id", "author-3",
                     "firstName", "Anne",
-                    "lastName", "Rice")
-    );
+                    "lastName", "Rice"),
+            ImmutableMap.of("id", "author-4",
+                    "firstName", "Joe",
+                    "lastName", "Abercrombie")
+    ));
 
     // Important: Every field from the schema has a DataFetcher associated with it.
     // If you don't specify any DataFetcher for a specific field, then the default PropertyDataFetcher is used.
@@ -65,6 +68,31 @@ public class GraphQLDataFetchers {
                     .filter(book -> book.get("id").equals(bookId))
                     .findFirst()
                     .orElse(null);
+        };
+    }
+
+    public DataFetcher getAllBooksDataFetcher() {
+        return dataFetchingEnvironment -> books.toArray();
+    }
+
+    public DataFetcher createBookDataFetcher() {
+        return dataFetchingEnvironment -> {
+
+            String bookId = dataFetchingEnvironment.getArgument("id");
+            String name = dataFetchingEnvironment.getArgument("name");
+            String pageCount = dataFetchingEnvironment.getArgument("pageCount");
+
+            Map<String, String> bookDetails = new HashMap<>();
+            bookDetails.put("id", bookId);
+            bookDetails.put("name", name);
+            bookDetails.put("pageCount", pageCount);
+
+            bookDetails.put("authorId", dataFetchingEnvironment.getArgument("authorId"));
+            books.add(bookDetails);
+
+
+            System.out.println("!!! " + bookDetails);
+            return bookDetails;
         };
     }
 
@@ -86,3 +114,15 @@ public class GraphQLDataFetchers {
         };
     }
 }
+
+//Default DataFetchers
+//We only implement two DataFetchers. As mentioned above, if you don't specify one,
+// the default PropertyDataFetcher is used. In our case it means Book.id, Book.name,
+// Book.pageCount, Author.id, Author.firstName and Author.lastName all have a default PropertyDataFetcher associated with it.
+//A PropertyDataFetcher tries to lookup a property on a Java object in multiple ways. In case of a java.util.Map
+// it simply looks up the property by key. This works perfectly fine for us because the
+// keys of the book and author Maps are the same as the fields specified in the schema.
+// For example in the schema we define for the Book type the field pageCount and the book DataFetcher returns a Map with a key pageCount.
+// Because the field name is the same as the key in the Map("pageCount") the PropertyDateFetcher works for us.
+//
+//Lets assume for a second we have a mismatch and the book Map has a key totalPages instead of pageCount. This would result in a null value for pageCount for every book, because the PropertyDataFetcher can't fetch the right value. In order to fix that you would have to register a new DataFetcher for Book.pageCount which looks like this:

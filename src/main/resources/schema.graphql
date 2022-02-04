@@ -1,21 +1,22 @@
-# GraphQL is that it is statically typed
+# GraphQL is statically typed
 # This schema defines one top level field (in the type Query): bookById which returns the details of a specific book.
 
 # queries a book by the book id
 type Query {
     bookById(id: ID): Book
+    # A corresponding DataFetcher is needed, e.g. public DataFetcher getAllBooksDataFetcher()
+    allBooks: [Book]!
 }
 
 # It also defines the type Book which has the fields: id, name, pageCount and author.
 type Book {
     id: ID!
     name: String!
-    pageCount: Int
+    pageCount: String
     author: Author
 }
 
 #author is of type Author, which is defined after Book.
-
 type Author {
     id: ID!
     firstName: String!
@@ -27,6 +28,20 @@ input AuthorInput {
     lastName: String!
 }
 
+#type Mutation {
+#    createBook(
+#        id: ID!,
+#        name: String!
+#        pageCount: String
+#        author: AuthorInput!
+#    ): Book!
+#}
+
 type Mutation {
-    createBook(id: String!, name: String!, pageCount: Int, author: AuthorInput):Book
+    createBook(
+        id: ID!,
+        name: String!
+        pageCount: String
+        authorId: String!
+    ): Book!
 }

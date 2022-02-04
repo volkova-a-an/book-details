@@ -38,4 +38,5 @@ public class RestAssuredTest {
                 .assertThat()
                 .body("data.bookById.name", equalTo("Harry Potter and the Philosopher's Stone"));
     }
+
 }
